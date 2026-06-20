@@ -1,19 +1,20 @@
 import { test, expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
+import type { BrowserContext, Page } from '@playwright/test';
 
+let context: BrowserContext;
 let page: Page;
 
 test.describe('Practice Components - Browser Fixture', () => {
     test.describe.configure({ mode: 'serial' });
 
     test.beforeAll(async ({ browser }) => {
-        const context = await browser.newContext({ storageState: 'auth.json' });
+        context = await browser.newContext({ storageState: 'auth.json' });
         page = await context.newPage();
         await page.goto('/dashboard/practice-components');
     });
 
     test.afterAll(async () => {
-        await page.context().close();
+        await context.close();
     });
 
     test('doubleClick', async () => {
@@ -37,20 +38,18 @@ test.describe('Practice Components - Browser Fixture', () => {
     });
 
     test('openNewTab', async () => {
-        const [newPage] = await Promise.all([
-            page.context().waitForEvent('page'),
-            page.getByRole('button', { name: 'Open New Tab' }).click(),
-        ]);
+        const newPagePromise = context.waitForEvent('page');
+        await page.getByRole('button', { name: 'Open New Tab' }).click();
+        const newPage = await newPagePromise;
         await newPage.waitForLoadState();
         expect(newPage.url()).toContain('example.com');
         await newPage.close();
     });
 
     test('openNewWindow', async () => {
-        const [newPage] = await Promise.all([
-            page.context().waitForEvent('page'),
-            page.getByRole('button', { name: 'Open New Window' }).click(),
-        ]);
+        const newPagePromise = context.waitForEvent('page');
+        await page.getByRole('button', { name: 'Open New Window' }).click();
+        const newPage = await newPagePromise;
         await newPage.waitForLoadState();
         expect(newPage.url()).toContain('example.com');
         await newPage.close();

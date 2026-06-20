@@ -2,12 +2,13 @@ import { test, expect } from '@playwright/test';
 import { randomNumber } from '../utils/randomNumber';
 import fs from 'fs';
 import path from 'path';
+import { faker } from '@faker-js/faker';
 
 test('add new user', async ({ page }) => {
     await page.goto('/dashboard/add-user');
 
-    await page.getByRole('textbox', { name: 'John', exact: true }).fill('Test');
-    await page.getByRole('textbox', { name: 'Doe' }).fill('User');
+    await page.getByRole('textbox', { name: 'John', exact: true }).fill(faker.person.firstName());
+    await page.getByRole('textbox', { name: 'Doe' }).fill(faker.person.lastName());
     const id = randomNumber(1000, 9999);
     const email = `testuser${id}@example.com`;
     await page.getByRole('textbox', { name: 'john@example.com' }).fill(email);

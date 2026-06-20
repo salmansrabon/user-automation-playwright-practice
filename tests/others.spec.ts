@@ -26,10 +26,9 @@ test('contextClick', async ({ page }) => {
 
 test('openNewTab', async ({ page, context }) => {
     await page.goto(PAGE);
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        page.getByRole('button', { name: 'Open New Tab' }).click(),
-    ]);
+    const newPagePromise = context.waitForEvent('page');
+    await page.getByRole('button', { name: 'Open New Tab' }).click();
+    const newPage = await newPagePromise;
     await newPage.waitForLoadState();
     expect(newPage.url()).toContain('example.com');
     await newPage.close();
@@ -37,10 +36,9 @@ test('openNewTab', async ({ page, context }) => {
 
 test('openNewWindow', async ({ page, context }) => {
     await page.goto(PAGE);
-    const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        page.getByRole('button', { name: 'Open New Window' }).click(),
-    ]);
+    const newPagePromise = context.waitForEvent('page');
+    await page.getByRole('button', { name: 'Open New Window' }).click();
+    const newPage = await newPagePromise;
     await newPage.waitForLoadState();
     expect(newPage.url()).toContain('example.com');
     await newPage.close();
