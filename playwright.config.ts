@@ -47,6 +47,14 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
+    {
+      name: 'integration',
+      testDir: './integration-test',
+      testMatch: /user-flow\.spec\.ts/,
+      use: {
+        baseURL: 'http://localhost:3000',
+      },
+    },
   ],
 
   /* Run your local dev server before starting the tests */
