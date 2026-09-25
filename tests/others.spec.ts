@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { SUITES } from '../utils/suites';
 
 const PAGE = '/dashboard/practice-components';
 
-test('doubleClick', async ({ page }) => {
+test('doubleClick', { tag: SUITES.smoke }, async ({ page }) => {
     await page.goto(PAGE);
     let alertMessage = '';
     page.on('dialog', async dialog => {
